@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
-  s.name = "vote_fu"
-  s.version = "0.0.11"
-  s.date = "2009-02-11"
-  s.summary = "Voting for ActiveRecord with multiple vote sources and advanced features."
-  s.email = "pete@peteonrails.com"
-  s.homepage = "http://blog.peteonrails.com/vote-fu"
-  s.description = "VoteFu provides the ability to have multiple voting entities on an arbitrary number of models in ActiveRecord."
+  s.name = "kandadaboggu-vote_fu"
+  s.version = "0.0.13"
+  s.date = "2010-02-20"
+  s.summary = "Enhanced vote_fu with numerical voting and total vote caching."
+  s.email = "kandadaboggu@gmail.com"
+  s.homepage = "http://github.com/kandadaboggu/vote_fu"
+  s.description = "Enhanced vote_fu with numerical voting and total vote caching."
   s.has_rdoc = false
-  s.authors = ["Peter Jackson", "Cosmin Radoi", "Bence Nagy", "Rob Maddox"]
+  s.authors = ["Peter Jackson", "Cosmin Radoi", "Bence Nagy", "Rob Maddox", "Kandada Boggu"]
   s.files = [ "CHANGELOG.markdown",
               "MIT-LICENSE",
               "README.markdown",

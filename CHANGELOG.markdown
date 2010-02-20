@@ -1,3 +1,11 @@
+2010-02-20
+==========
+* Changed the data-type of `vote` column in `votes` table to integer type.
+* Added support for vote count caching at the `voteable` model.
+* Added new method `votes_total` on `voteable` model to return the sum of +ve and -ve votes
+* Optimized several methods in `voteable` model (`voters_who_voted`, `voted_by?`)
+* Cleaned the code to use associations instead of direct SQL
+
 2009-02-11
 ==========
 * Merge in xlash's bugfix for PostgreSQL and his has\_karma patch for multi-model support. 
