@@ -113,7 +113,7 @@ module Juixe
         end
 
         def votes_total
-          self.votes.sum(:vote)
+          respond_to?(:vote_counter_column) ? send(self.vote_counter_column) : self.votes.sum(:vote)
         end
         
         def voters_who_voted
