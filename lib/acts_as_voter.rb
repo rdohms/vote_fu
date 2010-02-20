@@ -25,51 +25,41 @@ module PeteOnRails
         # Usage user.vote_count(true)  # All +1 votes
         #       user.vote_count(false) # All -1 votes
         #       user.vote_count()      # All votes
-        
+        #
         def vote_count(for_or_against = "all")
-          where = (for_or_against == "all") ? 
-            ["voter_id = ? AND voter_type = ?", id, self.class.name ] : 
-            ["voter_id = ? AND voter_type = ? AND vote = ?", id, self.class.name, for_or_against ]
-                        
-          Vote.count(:all, :conditions => where)
-
+          return self.votes.size if for_or_against == "all"
+          self.votes.count(:conditions => {:vote => (for_or_against ? 1 : -1)}) 
         end
                 
         def voted_for?(voteable)
-           0 < Vote.count(:all, :conditions => [
-                   "voter_id = ? AND voter_type = ? AND vote = ? AND voteable_id = ? AND voteable_type = ?",
-                   self.id, self.class.name, true, voteable.id, voteable.class.name
-                   ])
-         end
+          voteable.voted_by?(self, true)
+        end
 
-         def voted_against?(voteable)
-           0 < Vote.count(:all, :conditions => [
-                   "voter_id = ? AND voter_type = ? AND vote = ? AND voteable_id = ? AND voteable_type = ?",
-                   self.id, self.class.name, false, voteable.id, voteable.class.name
-                   ])
-         end
+        def voted_against?(voteable)
+          voteable.voted_by?(self, false)
+        end
 
-         def voted_on?(voteable)
-           0 < Vote.count(:all, :conditions => [
-                   "voter_id = ? AND voter_type = ? AND voteable_id = ? AND voteable_type = ?",
-                   self.id, self.class.name, voteable.id, voteable.class.name
-                   ])
-         end
+        def voted_on?(voteable)
+          voteable.voted_by?(self)
+        end
                 
         def vote_for(voteable)
-          self.vote(voteable, true)
+          self.vote(voteable, 1)
         end
         
         def vote_against(voteable)
-          self.vote(voteable, false)
+          self.vote(voteable, -1)
         end
 
         def vote(voteable, vote)
-          vote = Vote.new(:vote => vote, :voteable => voteable, :voter => self)
-          vote.save
+          Vote.create(:vote => vote, :voteable => voteable, :voter => self).tap do |v|
+            voteable.reload_vote_counter if !v.new_record? and voteable.respond_to?(:reload_vote_counter)
+          end
         end
-
+        
       end
+      
     end
+    
   end
 end

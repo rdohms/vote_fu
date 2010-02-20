@@ -20,16 +20,23 @@ This plugin started as an adaptation / update of act\_as\_voteable. It has grown
 4. Introduces some newer Rails features like named\_scope and :polymorphic keywords
 5. Adds "has\_karma" mixin for identifying key content contributors
 
+### Difference between original vote_fu 
+1. The data-type of `vote` column in `votes` table is changed to integer type.
+2. Support for vote count caching at the `voteable` model.
+3. New method `votes_total` on `voteable` model to return the sum of +ve and -ve votes
+4. Optimized several methods in `voteable` model (`voters_who_voted`, `voted_by?`)
+5. Code cleanup to use associations instead of direct SQL
+
 Installation
 ============
 Use either the plugin or the gem installation method depending on your preference. If you're not sure, the plugin method is simpler. Whichever you choose, create the migration afterward and run it to create the required model.
 
 ### Via plugin
-    ./script/plugin install git://github.com/peteonrails/vote_fu.git 
+    ./script/plugin install git://github.com/kandadaboggu/vote_fu.git 
 
 ### Via gem
 Add the following to your application's environment.rb:
-    config.gem "peteonrails-vote_fu", :lib => 'vote_fu', :source => 'http://gems.github.com'
+    config.gem "kandadaboggu-vote_fu", :lib => 'vote_fu', :source => "http://gemcutter.org"
 
 Install the gem:
     rake gems:install
@@ -50,14 +57,24 @@ Usage
 
 
     class Model < ActiveRecord::Base
- 	  acts_as_voteable
+ 	  acts_as_voteable :vote_counter => true # Stores the sum of the votes in the `vote_count`
+ 	  										 # column of the `models` table.
     end
 
+    class Post < ActiveRecord::Base
+ 	  acts_as_voteable :vote_counter => true # Stores the sum of the votes in the `vote_count`
+ 	  										 # column of the `posts` table.
+    end
+
+    class Comment < ActiveRecord::Base
+ 	  acts_as_voteable :vote_counter => :comments_vote_count # Stores the sum of the votes in the `comments_vote_count`
+ 	  										 # column of the `comments` table.
+    end
 
 ### Make your ActiveRecord model(s) that vote act as voter.
 
     class User < ActiveRecord::Base
- 	  acts_as_voter
+ 	  acts_as_voter 
     end
 
     class Robot < ActiveRecord::Base
@@ -110,8 +127,8 @@ ActiveRecord models that act as voteable can be queried for the positive votes, 
 
     positiveVoteCount = m.votes_for
     negativeVoteCount = m.votes_against
-    totalVoteCount    = m.votes_count
-
+    voteCount         = m.votes_count
+	totalVote		  = m.votes_total
 And because the Vote Fu plugin will add the has_many votes relationship to your model you can always get all the votes by using the votes property:
 
     allVotes = m.votes
@@ -194,7 +211,7 @@ Credits
 
 * Bence Nagy, Budapest, Hungary
 * Jon Maddox, Richmond, Virginia, USA
-
+* Kandada Boggu, Palo Alto, CA, USA
 #### Other works
 
 [Juixe  - The original ActsAsVoteable plugin inspired this code.][1]
@@ -218,3 +235,4 @@ Support: [Use my blog for support.][6]
 [6]: http://blog.peteonrails.com
 
 Copyright (c) 2008 Peter Jackson, released under the MIT license
+
