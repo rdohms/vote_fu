@@ -57,8 +57,7 @@ Usage
 
 
     class Model < ActiveRecord::Base
- 	  acts_as_voteable :vote_counter => true # Stores the sum of the votes in the `vote_count`
- 	  										 # column of the `models` table.
+ 	  acts_as_voteable 
     end
 
     class Post < ActiveRecord::Base
