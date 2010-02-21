@@ -148,8 +148,8 @@ module Juixe
         end
         
         def voted_by?(voter, for_or_against = "all")
-          options = {:vote => (for_or_against ? 1 : -1)} unless (for_or_against == "all")
-          self.votes.exists?({:voter_id => voter.id, :voter_type => voter.class.name}.merge(options||{}))
+          options = (for_or_against == "all") ? {} : {:vote => (for_or_against ? 1 : -1)}
+          self.votes.exists?({:voter_id => voter.id, :voter_type => voter.class.name}.merge(options))
         end
       end
     end
