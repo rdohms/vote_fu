@@ -21,12 +21,14 @@ This plugin started as an adaptation / update of act\_as\_voteable. It has grown
 5. Adds "has\_karma" mixin for identifying key content contributors
 
 ### Difference between original vote_fu 
-1. The data-type of `vote` column in `votes` table is changed to integer type.
+1. The data-type of the `vote` column in the `votes` table is changed to integer type.
 2. Support for vote count caching at the `voteable` model.
 3. New method `votes_total` on `voteable` model to return the sum of +ve and -ve votes
 4. Optimized several methods in `voteable` model (`voters_who_voted`, `voted_by?`)
 5. Code cleanup to use associations instead of direct SQL
-
+6. The `tally` method supports `at_least_total` and `at_most_total` parameters to
+   filter by sum of votes.
+7. The :order option of the `tally` method supports order by `total` (E.g: :order => "toal DESC")
 Installation
 ============
 Use either the plugin or the gem installation method depending on your preference. If you're not sure, the plugin method is simpler. Whichever you choose, create the migration afterward and run it to create the required model.
@@ -61,7 +63,7 @@ Usage
     end
 
     class Post < ActiveRecord::Base
- 	  acts_as_voteable :vote_counter => true # Stores the sum of the votes in the `vote_count`
+ 	  acts_as_voteable :vote_counter => true # Stores the sum of the votes in the `vote_total`
  	  										 # column of the `posts` table.
     end
 
@@ -109,17 +111,33 @@ You can easily retrieve voteable object collections based on the properties of t
           :limit => 10,
           :order => "items.name desc"
       })
-
 This will select the Items with between 1 and 10,000 votes, the votes having been cast within the last two weeks (not including today), then display the 10 last items in an alphabetical list.
+
+    @items = Item.tally(
+      {  :at_least_total => 1, 
+          :at_most_total => 10000,  
+          :start_at => 2.weeks.ago,
+          :end_at => 1.day.ago,
+          :limit => 10,
+          :order => "total desc"
+      })
+This will select the Items with between 1 and 10,000 total votes, the votes having been cast within the last two weeks (not including today), then display the 10 last items in a descending order list by total votes.
+
 
 ##### Tally Options:
     :start_at    - Restrict the votes to those created after a certain time
     :end_at      - Restrict the votes to those created before a certain time
     :conditions  - A piece of SQL conditions to add to the query
     :limit       - The maximum number of voteables to return
-    :order       - A piece of SQL to order by. Eg 'votes.count desc' or 'voteable.created_at desc'
-    :at_least    - Item must have at least X votes
-    :at_most     - Item may not have more than X votes
+    :order       - A piece of SQL to order by. Two calculated columns `count`, and `total`
+                   are available for sorting apart from other columns. Defaults to `total DESC`. 
+                     Eg: :order => 'count desc'
+                         :order => 'total desc'
+                         :order => 'post.created_at desc'
+    :at_least    - Item must have at least X votes count
+    :at_most     - Item may not have more than X votes count
+    :at_least_total    - Item must have at least X votes total
+    :at_most_total     - Item may not have more than X votes total
 
 #### Lower level queries
 ActiveRecord models that act as voteable can be queried for the positive votes, negative votes, and a total vote count by using the votes\_for, votes\_against, and votes\_count methods respectively. Here is an example:

@@ -1,6 +1,11 @@
+2010-02-21
+==========
+* Changed the `tally` method to add support for `at_least_total` and `at_most_total` parameters to filter by sum of votes.
+* Changed the `tally` method to add support for `total` column in :order paramter.
+
 2010-02-20
 ==========
-* Changed the data-type of `vote` column in `votes` table to integer type.
+* Changed the data-type of the `vote` column in the `votes` table to integer type.
 * Added support for vote count caching at the `voteable` model.
 * Added new method `votes_total` on `voteable` model to return the sum of +ve and -ve votes
 * Optimized several methods in `voteable` model (`voters_who_voted`, `voted_by?`)
