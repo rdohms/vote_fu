@@ -29,16 +29,20 @@ This plugin started as an adaptation / update of act\_as\_voteable. It has grown
 6. The `tally` method supports `at_least_total` and `at_most_total` parameters to
    filter by sum of votes.
 7. The :order option of the `tally` method supports order by `total` (E.g: :order => "toal DESC")
+
+### Difference between forked vote_fu
+1. Reverted the vote method so that errors are returned on duplicate vote if unique vote is on
+
 Installation
 ============
 Use either the plugin or the gem installation method depending on your preference. If you're not sure, the plugin method is simpler. Whichever you choose, create the migration afterward and run it to create the required model.
 
 ### Via plugin
-    ./script/plugin install git://github.com/kandadaboggu/vote_fu.git 
+    ./script/plugin install git://github.com/rdohms/vote_fu.git 
 
 ### Via gem
 Add the following to your application's environment.rb:
-    config.gem "kandadaboggu-vote_fu", :lib => 'vote_fu', :source => "http://gemcutter.org"
+    config.gem "rdohms-vote_fu", :lib => 'vote_fu', :source => "http://gemcutter.org"
 
 Install the gem:
     rake gems:install

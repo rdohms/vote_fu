@@ -1,3 +1,7 @@
+2010-02-28
+==========
+* reverted vote method in act_as_voter.rb
+
 2010-02-21
 ==========
 * Changed the `tally` method to add support for `at_least_total` and `at_most_total` parameters to filter by sum of votes.

@@ -52,9 +52,8 @@ module PeteOnRails
         end
 
         def vote(voteable, vote)
-          Vote.create(:vote => vote, :voteable => voteable, :voter => self).tap do |v|
-            voteable.reload_vote_counter if !v.new_record? and voteable.respond_to?(:reload_vote_counter)
-          end
+          vote = Vote.new(:vote => vote, :voteable => voteable, :voter => self)
+          vote.save
         end
         
       end
